@@ -7,12 +7,12 @@ const typesTrajets = require('./types-transport');
  */
 const GEOLOC_RUE_BOISSONADE = '48.839676861676594, 2.3338748374810754';
 
-async function traiterLigne(ligne, header) {
+async function traiterLigne(ligne, header, options) {
 
     const sortie = parserLigne(ligne, header);
 
     for await (trajet of sortie.trajets) {
-        if(typesTrajets.mappingVersTypeDeCalcul(trajet.transport) === typesTrajets.TYPES_MODE_CALCUL_DISTANCE.GOOGLE_MAPS) {
+        if(doitUtiliserGoogle(trajet, options)) {
             trajet.distance = await clientGoogle.calculDistance(
                 trajet.depart.geoloc,
                 trajet.arrivee.geoloc,
@@ -92,6 +92,19 @@ function isAllerRetour(celluleAR, idSortie) {
         default:
             throw new Error('Format AS/AR incorrect pour sortie ' + idSortie);
     }
+}
+
+/**
+ * Détermine si Google Maps Distance Matrix doit être utilisée pour calculer la distance.
+ */
+function doitUtiliserGoogle(trajet, options) {
+    if(!options.useGoogleMaps){
+        return false;
+    }
+
+    const typeGoogle = typesTrajets.TYPES_MODE_CALCUL_DISTANCE.GOOGLE_MAPS;
+    const typeDuTrajet = typesTrajets.mappingVersTypeDeCalcul(trajet.transport);
+    return typeDuTrajet === typeGoogle; 
 }
 
 /**

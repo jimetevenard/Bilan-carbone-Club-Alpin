@@ -6,6 +6,15 @@ const carbone = require('./src/js/carbone');
 
 const FILENAME = process.argv[2];
 
+/**
+ * Paramètres d'exécution
+ */
+const OPTIONS = {
+    // L'utilisation (payante) de l'API Google doit être explicitement
+    // activée via cette variable d'environnement
+    useGoogleMaps: 'true' === process.env.CARBONE_USE_GOOGLE
+};
+
 async function processLineByLine() {
   const fileStream = fs.createReadStream(FILENAME);
 
@@ -24,7 +33,7 @@ async function processLineByLine() {
         continue;
     }
 
-    await carbone.traiterLigne(csv.parseLine(line), header);
+    await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
 
   }
 }
