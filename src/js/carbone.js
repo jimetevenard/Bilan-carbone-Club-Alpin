@@ -1,3 +1,4 @@
+const clientADEME = require('./client-http-ademe');
 const clientGoogle = require('./client-http-google');
 const typesTrajets = require('./types-transport');
 
@@ -11,7 +12,11 @@ async function traiterLigne(ligne, header, options) {
 
     const sortie = parserLigne(ligne, header);
 
-    for await (trajet of sortie.trajets) {
+    for (trajet of sortie.trajets) {
+
+        /**
+         * Calcul de la distance
+         */
         if(doitUtiliserGoogle(trajet, options)) {
             trajet.distance = await clientGoogle.calculDistance(
                 trajet.depart.geoloc,
@@ -21,6 +26,17 @@ async function traiterLigne(ligne, header, options) {
         } else {
             trajet.distance = calculDistanceDirecte(trajet);
         }
+
+        /**
+         * Calcul des émissions en Kg d'eqCO2 liées au trajet
+         */
+        trajet.emissions = await clientADEME.calculEmissionsTrajet(
+            trajet.distance,
+            {
+                transport: typesTrajets.mappingVersTypesADEME(trajet.transport),
+                inclureConstruction: true
+            }
+        );
     };
 
     /**

@@ -13,7 +13,7 @@ const TYPES_CAF = {
    MINIBUS: 'MINIBUS',
    TAXI_VOITURE: 'TAXI-VOITURE',
     // 'TAXI-VOITURE (PORTAGE)', <= N.B. Ce type de cas existe dans le fichier CAF
-   TRAIN_INTERCITÉS: 'TRAIN-INTERCITÉS',
+   TRAIN_INTERCITES: 'TRAIN-INTERCITÉS',
    TRAIN_RER: 'TRAIN-RER',
    TRAIN_TER: 'TRAIN-TER',
    TRAIN_TRANSILIEN: 'TRAIN-TRANSILIEN',
@@ -126,6 +126,49 @@ function mappingVersTypesGoogle(typeCaf) {
 }
 
 /**
+ * TODO BIDOO
+ * @param {*} typeCaf 
+ */
+function mappingVersTypesADEME(typeCaf) {
+    checkTypeExiste(typeCaf);
+
+    switch (typeCaf) {
+        case TYPES_CAF.AUTOCAR:
+            return TYPES_ADEME.AUTOCAR_THERMIQUE
+        case TYPES_CAF.AVION:
+            return TYPES_ADEME.AVION
+
+        case TYPES_CAF.BATEAU_FERRY:
+        case TYPES_CAF.BATEAU_VEDETTE:
+            throw new Error('Transports maritimes non pris en charge')
+
+        case TYPES_CAF.BUS:
+            return TYPES_ADEME.BUS_THERMIQUE // TODO, toujours ??
+
+        case TYPES_CAF.COVOITURAGE:
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS // TODO confirmer l'hypothèse
+
+        case TYPES_CAF.METRO:
+            return TYPES_ADEME.METRO
+
+        case TYPES_CAF.MINIBUS:
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS // TODO confirmer l'hypothèse
+        case TYPES_CAF.TAXI_VOITURE:
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS
+
+        case TYPES_CAF.TRAIN_INTERCITES:
+            return TYPES_ADEME.INTERCITES
+        case TYPES_CAF.TRAIN_RER:
+        case TYPES_CAF.TRAIN_TRANSILIEN:
+            return TYPES_ADEME.RER_OU_TRANSILIEN
+        case TYPES_CAF.TRAIN_TER:
+            return TYPES_ADEME.TER
+        case TYPES_CAF.TRAIN_TGV:
+            return TYPES_ADEME.TGV
+    }
+}
+
+/**
  * Fonction mapping pour savoir comment calculer la distance pour le type de transport donné.
  */
 function mappingVersTypeDeCalcul(typeCaf) {
@@ -156,6 +199,7 @@ module.exports = {
     TYPES_ADEME,
     TYPES_MODE_CALCUL_DISTANCE,
     mappingVersTypesGoogle,
+    mappingVersTypesADEME,
     mappingVersTypeDeCalcul,
     normaliser
 };
