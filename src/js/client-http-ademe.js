@@ -15,7 +15,6 @@ const API_KEY_VAR = 'ADEME_API_KEY';
  * @param {*} distance en mètres
  * @param {*} paramsADEME object de paramètres :
  *            - transport: type ADEME
- *            - remplissage: Nombre de passager (pour transport type voiture)
  *            - inclureConstruction: Inclure la construction du mode de transport dans le résultat
  * @returns Le nombre de Kilogrammes d'équivalent CO2 émis par le trajet
  *          Cf. https://fr.wikipedia.org/wiki/%C3%89quivalent_CO2
@@ -30,7 +29,6 @@ async function calculEmissionsTrajet(distance, paramsADEME) {
             displayAll: 0,
             transports: paramsADEME.transport,
             ignoreRadiativeForcing: 0,
-            // occupencyRate: paramsADEME.remplissage, TODO le type voiture n'est pas utilisé
             includeConstruction: paramsADEME.inclureConstruction ? '1' : '0',
             language: 'fr'
         };

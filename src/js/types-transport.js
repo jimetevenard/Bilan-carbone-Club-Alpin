@@ -126,7 +126,9 @@ function mappingVersTypesGoogle(typeCaf) {
 }
 
 /**
- * TODO BIDOO
+ * Fonction mapping pour déduire le type ADEME à partir du type CAF
+ * Les hypothèse retenues sont celles du groupe de travail.
+ * 
  * @param {*} typeCaf 
  */
 function mappingVersTypesADEME(typeCaf) {
@@ -143,18 +145,18 @@ function mappingVersTypesADEME(typeCaf) {
             throw new Error('Transports maritimes non pris en charge')
 
         case TYPES_CAF.BUS:
-            return TYPES_ADEME.BUS_THERMIQUE // TODO, toujours ??
+            return TYPES_ADEME.BUS_THERMIQUE // Hypothèse - Les bus en circulation en France sont majoritairement thermiques, surtout en région.
 
         case TYPES_CAF.COVOITURAGE:
-            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS // TODO confirmer l'hypothèse
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS // Hypothèse à valider
 
         case TYPES_CAF.METRO:
             return TYPES_ADEME.METRO
 
         case TYPES_CAF.MINIBUS:
-            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS // TODO confirmer l'hypothèse
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_4_PASSAGERS // Hypothèse à valider
         case TYPES_CAF.TAXI_VOITURE:
-            return TYPES_ADEME.COVOITURAGE_THERMIQUE_3_PASSAGERS
+            return TYPES_ADEME.COVOITURAGE_THERMIQUE_4_PASSAGERS// Hypothèse à valider
 
         case TYPES_CAF.TRAIN_INTERCITES:
             return TYPES_ADEME.INTERCITES
