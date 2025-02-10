@@ -42,6 +42,19 @@ async function traiterLigne(ligne, header, options) {
                 }
             );
         }
+
+        // Distance totale pour la sortie
+        sortie.totalDistance = sortie.trajets
+            .map(t => t.distance)
+            .reduce(reducerSomme, 0)
+            .toFixed(2);
+
+        // Emission totale de la sortie
+        sortie.totalEmissions = sortie.trajets
+            .map(t => t.emissions)
+            .reduce(reducerSomme, 0)
+            .toFixed(3);
+
         sortie.traitement = 'OK';
     } catch(erreur) {
         console.warn(`Erreur sur la sortie ${sortie.idSortie}`, erreur);
@@ -152,6 +165,13 @@ function calculDistanceDirecte(trajet) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   
     return (R * c);
+}
+
+/**
+ * Helper. somme avec reduce()
+ */
+function reducerSomme(accu, courant) {
+    return accu + courant;
 }
 
 module.exports = {traiterLigne};
