@@ -26,7 +26,7 @@ async function calculEmissionsTrajet(distance, paramsADEME) {
     try {
         // Paramètres de la requête
         const params = {
-            km: Math.round(distance / 1000),
+            km: Math.round(distance),
             displayAll: 0,
             transports: paramsADEME.transport,
             ignoreRadiativeForcing: 0,

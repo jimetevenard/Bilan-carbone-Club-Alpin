@@ -23,9 +23,9 @@ async function traiterLigne(ligne, header, options) {
                     trajet.depart.geoloc,
                     trajet.arrivee.geoloc,
                     typesTrajets.mappingVersTypesGoogle(trajet.transport)
-                );
+                ) / 1000; // Conversion en Km
             } else {
-                trajet.distance = calculDistanceDirecte(trajet);
+                trajet.distance = calculDistanceDirecte(trajet) / 1000; // Conversion en Km
             }
     
             /**
