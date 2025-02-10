@@ -12,32 +12,38 @@ async function traiterLigne(ligne, header, options) {
 
     const sortie = parserLigne(ligne, header);
 
-    for (trajet of sortie.trajets) {
+    try {
+        for (trajet of sortie.trajets) {
 
-        /**
-         * Calcul de la distance
-         */
-        if(doitUtiliserGoogle(trajet, options)) {
-            trajet.distance = await clientGoogle.calculDistance(
-                trajet.depart.geoloc,
-                trajet.arrivee.geoloc,
-                typesTrajets.mappingVersTypesGoogle(trajet.transport)
-            );
-        } else {
-            trajet.distance = calculDistanceDirecte(trajet);
-        }
-
-        /**
-         * Calcul des émissions en Kg d'eqCO2 liées au trajet
-         */
-        trajet.emissions = await clientADEME.calculEmissionsTrajet(
-            trajet.distance,
-            {
-                transport: typesTrajets.mappingVersTypesADEME(trajet.transport),
-                inclureConstruction: true
+            /**
+             * Calcul de la distance
+             */
+            if(doitUtiliserGoogle(trajet, options)) {
+                trajet.distance = await clientGoogle.calculDistance(
+                    trajet.depart.geoloc,
+                    trajet.arrivee.geoloc,
+                    typesTrajets.mappingVersTypesGoogle(trajet.transport)
+                );
+            } else {
+                trajet.distance = calculDistanceDirecte(trajet);
             }
-        );
-    };
+    
+            /**
+             * Calcul des émissions en Kg d'eqCO2 liées au trajet
+             */
+            trajet.emissions = await clientADEME.calculEmissionsTrajet(
+                trajet.distance,
+                {
+                    transport: typesTrajets.mappingVersTypesADEME(trajet.transport),
+                    inclureConstruction: true
+                }
+            );
+        }
+        sortie.traitement = 'OK';
+    } catch(erreur) {
+        console.warn(`Erreur sur la sortie ${sortie.idSortie}`, erreur);
+        sortie.traitement = 'ERREUR';
+    }
 
     /**
      * TODO : Pour test, on affiche pour l'instant l'objet résultant en console
@@ -47,7 +53,7 @@ async function traiterLigne(ligne, header, options) {
 
 function parserLigne(ligne, header) {
     const sortie = {
-        idSortie: ligne[1],
+        idSortie: ligne[1] || 'INCONNU',
         titre: ligne[2],
         trajets: []
     };
