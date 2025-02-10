@@ -18,15 +18,18 @@ async function traiterLigne(ligne, header, options) {
             /**
              * Calcul de la distance
              */
+            let distanceAller; // en mètres
             if(doitUtiliserGoogle(trajet, options)) {
-                trajet.distance = await clientGoogle.calculDistance(
+                distanceAller = await clientGoogle.calculDistance(
                     trajet.depart.geoloc,
                     trajet.arrivee.geoloc,
                     typesTrajets.mappingVersTypesGoogle(trajet.transport)
-                ) / 1000; // Conversion en Km
+                );
             } else {
-                trajet.distance = calculDistanceDirecte(trajet) / 1000; // Conversion en Km
+                distanceAller = calculDistanceDirecte(trajet);
             }
+            facteurDistance = trajet.allerRetour ? 2 : 1;
+            trajet.distance = distanceAller * facteurDistance / 1000; // Conversion en Km
     
             /**
              * Calcul des émissions en Kg d'eqCO2 liées au trajet
