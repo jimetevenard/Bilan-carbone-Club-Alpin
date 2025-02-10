@@ -1,4 +1,4 @@
-const clientGoogle = require('./client-google');
+const clientGoogle = require('./client-http-google');
 const typesTrajets = require('./types-transport');
 
 /**
