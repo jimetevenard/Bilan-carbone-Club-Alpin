@@ -44,11 +44,10 @@ async function calculDistance(goelocDepart, geolocArrivee, modesGoogle){
             }
             
             jsonGoogle = await clientHTTP.makeRequestAsync(
-                API_KEY_VAR,
-                clientHTTP.TYPES_API_KEY.QUERY_PARAM,
                 'maps.googleapis.com',
                 '/maps/api/distancematrix/json',
-                params
+                params,
+                authGoogle
             );
             return parseInt(jsonGoogle.rows[0].elements[0].distance.value);
         } catch (e) {
@@ -65,6 +64,17 @@ async function calculDistance(goelocDepart, geolocArrivee, modesGoogle){
     const msg = 'Erreur lors du traitement de la réponse Google Distance Matrix';
     console.error(msg, JSON.stringify(jsonGoogle));
     throw new Error(msg, { cause: erreur })
+}
+
+/*
+* Fonction d'authent pour Google (Query param)
+*/
+function authGoogle(request) {
+   if(!process.env[API_KEY_VAR]){
+       throw new Error(`Variable d'environnement ${API_KEY_VAR} non définie.`);
+   }
+
+   request.queryParams['key'] = process.env[API_KEY_VAR];
 }
 
 module.exports = {calculDistance};

@@ -11,28 +11,39 @@ const TYPES_API_KEY = {
     BEARER_TOKEN: 2
 };
 
-
-async function makeRequestAsync(apiKeyVariableName, apiKeyType, hostname, path, params) {
-    if(!process.env[apiKeyVariableName]){
-        throw new Error(`Variable d'environnement ${apiKeyVariableName} non définie`);
-    }
-    const apiKey = process.env[apiKeyVariableName];
-    if(apiKeyType === TYPES_API_KEY.QUERY_PARAM) {
-        params['key'] = apiKey;
-    }
+/**
+ * Lance une requete HTTPS et parse le JSON retourné
+ * 
+ * @param {*} hostname Nom d'hôte
+ * @param {*} path Path du endpoint (sans les params, ni de '?')
+ * @param {*} queryParams Query params
+ * @param {*} authHandler Optionel, fonction pour géréer l'authent.
+ *            Prend en paramètre unique un objet `request` :
+ *            ```js
+ *            {
+ *                queryParams: Object {key: value},
+ *                headers:     Object {key: value}
+ *            }
+ *            ```
+ * @returns l'Objet parsé
+ */
+async function makeRequestAsync(hostname, path, queryParams, authHandler) {
 
     const options = {
         hostname,
-        path: `${path}?${querystring.stringify(params)}`,  // Ajout des paramètres à l'URL
         method: 'GET',
         headers: {
             'User-Agent': 'Node.js HTTP Client',
             'Accept': 'application/json',
         }
     };
-    if(apiKeyType === TYPES_API_KEY.BEARER_TOKEN) {
-        options.headers['Authorization'] = `Bearer ${apiKey}`;
+
+    if(typeof authHandler === 'function') {
+        authHandler({queryParams, headers: options.headers});
     }
+
+    // Ajout des paramètres à l'URL
+    options.path = `${path}?${querystring.stringify(queryParams)}`;
 
     // Création d'une Promesse pour gérer la requête asynchrone
     const response = await new Promise((resolve, reject) => {

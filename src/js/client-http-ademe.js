@@ -34,11 +34,10 @@ async function calculEmissionsTrajet(distance, paramsADEME) {
         };
 
         jsonADEME = await clientHTTP.makeRequestAsync(
-            API_KEY_VAR,
-            clientHTTP.TYPES_API_KEY.BEARER_TOKEN,
             'impactco2.fr',
             '/api/v1/transport',
-            params
+            params,
+            authADEME
         );
         return parseFloat(jsonADEME.data[0].value);
     } catch (e) {
@@ -46,6 +45,22 @@ async function calculEmissionsTrajet(distance, paramsADEME) {
         console.error(msg, JSON.stringify(jsonADEME));
         throw new Error(msg, { cause: e })
     }
+}
+
+/**
+ * Fonction d'authent pour l'ADEME (Bearer token)
+ */
+function authADEME(request) {
+    if(!process.env[API_KEY_VAR]){
+        // L'ADEME tolère les requêtes sans API KEY, avec un warning dans la réponse :
+        //
+        // > La requete n'est pas authentifée. Nous nous reservons le droit de couper cette
+        // > API aux utilisateurs anonymes, veuillez nous contacter à impactco2@ademe.fr pour
+        // > obtenir une clé d'API gratuite.
+        console.warn(`Variable d'environnement ${API_KEY_VAR} non définie, requête non identifée`);
+    }
+
+    request.headers['Authorization'] = `Bearer ${process.env[API_KEY_VAR]}`;
 }
 
 
