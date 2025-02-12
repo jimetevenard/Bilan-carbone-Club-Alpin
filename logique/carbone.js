@@ -1,5 +1,5 @@
-const clientADEME = require('./client-http-ademe');
-const clientGoogle = require('./client-http-google');
+const clientADEME = require('../lib/client-http-ademe');
+const clientGoogle = require('../lib/client-http-google');
 const typesTrajets = require('./types-transport');
 
 /**

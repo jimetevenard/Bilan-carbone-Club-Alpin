@@ -1,9 +1,14 @@
+/**
+ * Fichier de lancement en ligne de commande.
+ * `node main.js <fichier-entrée.csv>`
+ */
+
 const fs = require('fs');
 const readline = require('readline');
 
-const csv = require('./src/js/csv');
-const jsonWriter = require('./export-json')
-const carbone = require('./src/js/carbone');
+const csv = require('./lib/import-csv');
+const jsonWriter = require('./lib/export-json')
+const carbone = require('./logique/carbone');
 
 const FILENAME = process.argv[2];
 
