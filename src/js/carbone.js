@@ -61,16 +61,16 @@ async function traiterLigne(ligne, header, options) {
         sortie.traitement = 'ERREUR';
     }
 
-    /**
-     * TODO : Pour test, on affiche pour l'instant l'objet résultant en console
-     */
-    console.log(JSON.stringify(sortie, null, 2));
+    return sortie;
 }
 
 function parserLigne(ligne, header) {
     const sortie = {
+        codeActivite: ligne[0],
         idSortie: ligne[1] || 'INCONNU',
         titre: ligne[2],
+        duree: ligne[3],
+        nbInscriptions: ligne[4],
         trajets: []
     };
 

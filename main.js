@@ -2,6 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 
 const csv = require('./src/js/csv');
+const jsonWriter = require('./export-json')
 const carbone = require('./src/js/carbone');
 
 const FILENAME = process.argv[2];
@@ -33,9 +34,11 @@ async function processLineByLine() {
         continue;
     }
 
-    await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
+    const sortieTraitee = await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
+    jsonWriter.push(sortieTraitee); 
 
   }
+  jsonWriter.end();
 }
 
 processLineByLine();
