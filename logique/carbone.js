@@ -1,6 +1,6 @@
-const clientADEME = require('../lib/client-http-ademe');
-const clientGoogle = require('../lib/client-http-google');
-const typesTrajets = require('./types-transport');
+const clientADEME = require('../lib/client-http-ademe.js');
+const clientGoogle = require('../lib/client-http-google.js');
+const typesTrajets = require('./types-transport.js');
 
 /**
  * Latitude/Longitude du Club Alpin - 12 Rue Boissonade, 75014 Paris

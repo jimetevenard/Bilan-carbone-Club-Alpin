@@ -6,9 +6,9 @@
 const fs = require('fs');
 const readline = require('readline');
 
-const csv = require('./lib/import-csv');
-const jsonWriter = require('./lib/export-json')
-const carbone = require('./logique/carbone');
+const csv = require('./lib/import-csv.js');
+const jsonWriter = require('./lib/export-json.js');
+const carbone = require('./logique/carbone.js');
 
 const FILENAME = process.argv[2];
 
