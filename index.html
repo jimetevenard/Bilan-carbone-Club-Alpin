@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbone - Lanceur Web</title>
+</head>
+<body>
+    <textarea>
+
+    </textarea>
+
+    <input type="file" id="fileInput">
+
+    <script src="https://unpkg.com/browser-cjs/require.js"></script>
+    <script>
+        // Il faut le servir en http(s)://, pas en file:// pour que les require fonctionnent
+        // (ça relativise la "simplicité" du html, il faut un serveur pour l'utiliser en local)
+
+        /**
+         * 
+         */
+        process = {env: {}};
+
+        /**
+         * Paramètres d'exécution
+         */
+        const OPTIONS = {
+            // TODO, ce sera une case à cocher
+            useGoogleMaps: false
+        };
+
+
+        const csv = require('./lib/import-csv.js');
+        const carbone = require('./logique/carbone.js');
+
+        document.getElementById('fileInput').addEventListener('change', onFileSelected);
+
+        /**
+         *
+         */
+        function onFileSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                let fileContent = e.target.result;
+
+                // Remplacer toutes les occurrences de CRLF (\r\n) par LF (\n)
+                fileContent = fileContent.replace(/\r\n/g, '\n');
+                
+                // Diviser le contenu du fichier par lignes
+                const lines = fileContent.split('\n');
+                traiterLignes(lines);
+            };
+
+            reader.onerror = function(error) {
+                console.error('Erreur lors de la lecture du fichier:', error);
+            };
+
+            // Lire le fichier comme texte
+            reader.readAsText(file);
+        }
+
+        /**
+         * 
+         */
+        function traiterLignes(tLignes) {
+            let header = undefined;
+
+            tLignes.forEach(async (line) => {
+                if(!header) {
+                    header = csv.parseLine(line);
+                    return;
+                }
+
+                const sortieTraitee = await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
+
+                // TODO : Simple log du résultat pour l'instant
+                console.log(JSON.stringify(sortieTraitee,null, 2));
+            });
+        }
+    </script>
+</body>
+</html>
