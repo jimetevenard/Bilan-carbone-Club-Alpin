@@ -230,8 +230,17 @@ function mappingVersTypeDeCalcul(typeCaf) {
  *   Plusieurs espaces et/ou tirets à la suite seront remplacés par un seul tiret
  */
 function normaliser(typeCafBrut) {
+    if(!typeCafBrut) {
+        throw new Error(`Type de trajet non spécifié [${typeCafBrut}]`);
+    }
+
+    const typeCaf = typeCafBrut.trim().toUpperCase();
+    if(typeCaf.length === 0 || typeCaf === 'NULL') {
+        throw new Error(`Type de trajet non spécifié [${typeCafBrut}]`);
+    }
+
     const REGEX_ESPACES_TIRETS = /[ _-]+/g;
-    return typeCafBrut.toUpperCase().replaceAll(REGEX_ESPACES_TIRETS,'-');
+    return typeCaf.replaceAll(REGEX_ESPACES_TIRETS,'-');
 }
 
 module.exports = {

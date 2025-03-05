@@ -12,6 +12,11 @@ async function traiterLigne(ligne, header, options) {
 
     const sortie = parserLigne(ligne, header);
 
+    if(sortie.trajets.length === 0){
+        sortie.traitement = 'ERREUR';
+        return sortie;
+    }
+
     try {
         for (trajet of sortie.trajets) {
 
@@ -58,6 +63,7 @@ async function traiterLigne(ligne, header, options) {
         sortie.traitement = 'OK';
     } catch(erreur) {
         console.warn(`Erreur sur la sortie ${sortie.idSortie}`, erreur);
+        sortie._erreur = erreur.message;
         sortie.traitement = 'ERREUR';
     }
 
@@ -71,12 +77,25 @@ function parserLigne(ligne, header) {
         titre: ligne[2],
         duree: ligne[3],
         nbInscriptions: ligne[4],
-        trajets: []
+        _raw: JSON.stringify(ligne),
     };
 
-    // Premier tronçon : Il n'y a qu'une colonne 'départ', qui vaut toujours 'Paris'
-    //                   Pas de colonne géoloc pour le départ.
-    sortie.trajets.push({
+    try {
+        sortie.trajets = parserTrajets(ligne, header, sortie.idSortie);
+    } catch(erreur) {
+        console.warn(`Erreur sur la sortie ${sortie.idSortie} (traitement trajets)`, erreur);
+        sortie.trajets = [];
+        sortie._erreur = erreur.message;
+        sortie.traitement = 'ERREUR';
+    }
+
+    return sortie;
+}
+
+function parserTrajets(ligne, header) {
+    const trajets = [];
+
+    trajets.push({
         depart: {
             lieu: ligne[5],
             geoloc: GEOLOC_RUE_BOISSONADE
@@ -86,49 +105,49 @@ function parserLigne(ligne, header) {
             geoloc: ligne[7]
         },
         transport: typesTrajets.normaliser(ligne[8]),
-        allerRetour: isAllerRetour(ligne[9], sortie.idSortie)
+        allerRetour: isAllerRetour(ligne[9])
     });
 
     // trajets suivants : colonnes 'Tronçon N : départ' et les 5 suivantes
-    for(let i = 2; i < 42; i++){
+    for (let i = 2; i < 42; i++) {
         const nomColDepart = `Tronçon ${i} : départ`;
         const indexColDepart = header.indexOf(nomColDepart);
 
-        if(indexColDepart === -1){
+        if (indexColDepart === -1) {
             // On a atteint le dernier tronçon possible du tableau, on s'arrête là.
             break;
         }
 
-        if(!ligne[indexColDepart]) {
+        if (!ligne[indexColDepart]) {
             // On a atteint le dernier tronçon de cette sortie, on s'arrête là.
             break;
         }
 
-        sortie.trajets.push({
+        trajets.push({
             depart: {
                 lieu: ligne[indexColDepart],
-                geoloc: ligne[indexColDepart + 1] 
+                geoloc: ligne[indexColDepart + 1]
             },
             arrivee: {
                 lieu: ligne[indexColDepart + 2],
                 geoloc: ligne[indexColDepart + 3]
             },
             transport: typesTrajets.normaliser(ligne[indexColDepart + 4]),
-            allerRetour: isAllerRetour(ligne[indexColDepart + 5], sortie.idSortie)
+            allerRetour: isAllerRetour(ligne[indexColDepart + 5])
         });
     }
 
-    return sortie;
+    return trajets;
 }
 
-function isAllerRetour(celluleAR, idSortie) {
+function isAllerRetour(celluleAR) {
     switch(celluleAR) {
         case 'AR':
             return true;
         case 'AS':
             return false;
         default:
-            throw new Error('Format AS/AR incorrect pour sortie ' + idSortie);
+            throw new Error('Format AS/AR incorrect');
     }
 }
 
