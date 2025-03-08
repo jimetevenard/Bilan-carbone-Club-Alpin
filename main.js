@@ -12,6 +12,8 @@ const carbone = require('./logique/carbone');
 
 const FILENAME = process.argv[2];
 
+let nbTrajets = 0;
+
 /**
  * Paramètres d'exécution
  */
@@ -40,10 +42,12 @@ async function processLineByLine() {
     }
 
     const sortieTraitee = await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
+    nbTrajets += sortieTraitee.trajets.length;
     jsonWriter.push(sortieTraitee); 
 
   }
   jsonWriter.end();
+  console.warn(`Nombre total de trajets : ${nbTrajets}`);
 }
 
 processLineByLine();
