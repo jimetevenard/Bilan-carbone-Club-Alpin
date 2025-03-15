@@ -41,11 +41,13 @@ async function processLineByLine() {
         continue;
     }
 
+    // Pour chaque sortie, lancement du traitement
     const sortieTraitee = await carbone.traiterLigne(csv.parseLine(line), header, OPTIONS);
-    nbTrajets += sortieTraitee.trajets.length;
-    jsonWriter.push(sortieTraitee); 
+    jsonWriter.push(sortieTraitee);
 
+    nbTrajets += sortieTraitee.trajets.length;
   }
+
   jsonWriter.end();
   console.warn(`Nombre total de trajets : ${nbTrajets}`);
 }

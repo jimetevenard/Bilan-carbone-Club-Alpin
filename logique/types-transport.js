@@ -1,6 +1,6 @@
 /**
- * Type utilisés dans le fichier.
- * (Ici, normalisés en capitales, car il y a quelques variations dans le fichier)
+ * Types utilisés dans le fichier.
+ * Normalisés en capitales, car il y a quelques variations dans le fichier
  */
 const TYPES_CAF = {
    AUTOBUS: 'AUTOBUS', 
@@ -14,7 +14,6 @@ const TYPES_CAF = {
    METRO: 'MÉTRO',
    MINIBUS: 'MINIBUS',
    TAXI_VOITURE: 'TAXI-VOITURE',
-    // 'TAXI-VOITURE (PORTAGE)', <= N.B. Ce type de cas existe dans le fichier CAF
    TRAIN_INTERCITES: 'TRAIN-INTERCITÉS',
    TRAIN_RER: 'TRAIN-RER',
    TRAIN_TER: 'TRAIN-TER',
@@ -33,11 +32,13 @@ const TYPES_GOOGLE = {
    WALKING: 'walking', // requests walking directions or distance via pedestrian paths & sidewalks (where available).
    BICYCLING: 'bicycling', // requests bicycling directions or distance via bicycle paths & preferred streets (where available).
 
-   // requests directions or distance via public transit routes (where available). Transit trips are available for up to
-   // 7 days in the past or 100 days in the future. If you set the mode to transit, you can optionally specify either a
-   // departure_time or an arrival_time. If neither time is specified, the departure_time defaults to now
-   // (that is, the departure time defaults to the current time).
-   // You can also optionally include a transit_mode and/or a transit_routing_preference. 
+   /**
+    * requests directions or distance via public transit routes (where available). Transit trips are available for up to
+    * 7 days in the past or 100 days in the future. If you set the mode to transit, you can optionally specify either a
+    * departure_time or an arrival_time. If neither time is specified, the departure_time defaults to now
+    * (that is, the departure time defaults to the current time).
+    * You can also optionally include a transit_mode and/or a transit_routing_preference. 
+    */
    TRANSIT: 'transit', 
 }
 
@@ -115,7 +116,7 @@ function mappingVersTypesGoogle(typeCaf) {
          * - Amplitudes horaires longues
          * - Certains ferries n'apparaissent qu'en mode piéton ou "driving" selon des règles floues
          *   Ex: Roscoff -> Plymouth n'apparait qu'en voiture (driving) alors qu'il est possible d'y embarquer à pied.
-         *       Pour le même trajet à pied (walking), Google retourne un détour improbable qui remonte la cote
+         *       Pour le même trajet à pied (walking), Google retourne un détour improbable qui remonte la côte
          *       à pied pour prende deux ferries en passant par Jersey.
          * 
          * En ce qui concerne l'avion, l'ADEME utilise le calcul direct pour tous les trajets en avion
@@ -131,7 +132,7 @@ function mappingVersTypesGoogle(typeCaf) {
 
 /**
  * Fonction mapping pour déduire le type ADEME à partir du type CAF
- * Les hypothèse retenues sont celles du groupe de travail.
+ * Les hypothèses retenues sont celles du groupe de travail.
  * 
  * @param {*} typeCaf 
  */
@@ -226,7 +227,7 @@ function mappingVersTypeDeCalcul(typeCaf) {
  * 
  * - Le fichier d'origine contentien parfois des minuscules, parfois des minuscules.
  *   On passe tout en majuscules.
- * - S'il contient des espaces et/ou des tirets, on remplace par un tiret
+ * - S'il contient des espaces et/ou des tirets (hauts ou bas), on remplace par un tiret
  *   Plusieurs espaces et/ou tirets à la suite seront remplacés par un seul tiret
  */
 function normaliser(typeCafBrut) {

@@ -183,7 +183,7 @@ la saisie du nom d'une ville (ex: Grenoble) ou d'une gare donnera toujours les m
 
 [^6]: Cf. [lib/client-http-google.js](lib/client-http-google.js#L9)
 [^7]: Voir F.A.Q en pied de page sur <https://impactco2.fr/outils/transport>
-[^8] Voir <https://developers.google.com/maps/documentation/distance-matrix/get-api-key?hl=fr>
+[^8]: Voir <https://developers.google.com/maps/documentation/distance-matrix/get-api-key?hl=fr>
 
 
 
