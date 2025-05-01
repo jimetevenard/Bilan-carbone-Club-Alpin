@@ -65,6 +65,8 @@ L'[API Impact CO₂ de l'ADEME](https://www.data.gouv.fr/fr/dataservices/api-imp
 
 La construction de l'infrastructure est incluse dans le résultat (C'est un paramètre optionnel de l'API)
 
+Les émissions sont calculées **par personne**.
+
 
 > L'ADEME se base sur un barème kilométrique pour calculer l'impact des transports [^7]  
 > Cf. [types-transport.js > mappingVersTypesADEME()](logique/types-transport.js#L134) pour les règles de conversion vers l'un des 17 types de transports référencés par l'ADEME.
@@ -96,6 +98,8 @@ node lib/export-csv.js resultat.json > resultat.csv
 ```
 
 ### Format de sortie (JSON)
+
+NB: Le champ `totalEmissions` est **par personne**. (le `nbInscriptions` n'est pas pris en compte dans le calcul)
 
 ```json
 [
@@ -131,6 +135,8 @@ node lib/export-csv.js resultat.json > resultat.csv
 
 
 ### Format de sortie (CSV)
+
+NB: Le champ `Total CO2` est **par personne**. (le `Nombre d'inscriptions` n'est pas pris en compte dans le calcul)
 
 ```
 | "Code activité" | "Numéro de sortie" | "Traitement carbone" | "Titre de la sortie"        | "Durée" | "Nombre d'inscriptions" | "Total KM" | "Total CO2" | "Tronçon 1 : départ" | ""                                       | "T1 : arrivée"        | ""                                     | "T1 : transport" | "T1 : AR" | "T1 : Distance (totale)" | "T1 : Émissions"      | "Tronçon 2 : départ" | etc.
